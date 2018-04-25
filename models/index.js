@@ -32,8 +32,27 @@ const Page = db.define('page', {
             // 'this' allows you to access attributes of the instance
             return '/wiki/' + url;
         },
-    },
+    }
 });
+
+//HOOKS FOR PAGE
+//MAKES A URL, BEFORE VALIDATING THE THE ROW THAT WILL BE ADDED TO PAGES TABLE
+Page.beforeValidate((pageInstance) => {
+    getURL(pageInstance);
+})
+
+function getURL(instance) {
+    if (instance.title) {
+        let title = instance.getDataValue('title');
+        const urlTitleCreated = title.replace(/\s+/g, '_').replace(/\W/g, '');
+        instance.urlTitle = urlTitleCreated;
+
+    } else instance.urlTitle = Math.random().toString(36).substring(2, 7);
+
+}
+
+
+
 
 const User = db.define('user', {
     name: {
@@ -48,21 +67,8 @@ const User = db.define('user', {
     },
 });
 
-//MAKES A URL, BEFORE VALIDATING THE THE ROW THAT WILL BE ADDED TO PAGES TABLE
-Page.beforeValidate((pageInstance) => {
-    getURL(pageInstance);
-})
 
-function getURL(instance) {
-    if (instance.title) {
-        let title = instance.getDataValue('title');
-        title = title.split(" ").join("_")
-        const urlTitleCreated = title.replace(/\W/g, '');
-        instance.urlTitle = urlTitleCreated;
 
-    } else instance.urlTitle = Math.random().toString(36).substring(2, 7);
-
-}
 
 module.exports = {
     Page: Page,

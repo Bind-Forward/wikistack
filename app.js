@@ -38,6 +38,11 @@ app.use("/", router)
 
 app.use(express.static('public'))
 
+//ERROR HANDLING, NEEDS 4 ARGS
+app.use(function (err, req, res, next) {
+    console.error(err);
+    res.status(500).send(err.message);
+})
 
 //**SYNCING MODELS HERE**
 // **USED DB TO INCLUDE ALL OF OUR TABLES**
@@ -53,7 +58,7 @@ app.use(express.static('public'))
 //
 
 models.db.sync({
-        force: true
+        force: false
     })
     .then(function () {
         console.log('All tables created!');
