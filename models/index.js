@@ -7,6 +7,8 @@ const db = new Sequelize('postgres://localhost:5432/wikistack', {
 const Page = db.define('page', {
     title: {
         type: Sequelize.STRING,
+        unique: true
+
     },
     urlTitle: {
         type: Sequelize.STRING,
@@ -17,30 +19,26 @@ const Page = db.define('page', {
         type: Sequelize.TEXT,
     },
     status: {
-        type: Sequelize.ENUM('open', 'closed'),
-    },
-    route: {
-        type: Sequelize.STRING,
-        //        allowNull: false,        
-        // this defines the ‘getter’
-        // ‘this’ refers to the instance (same as an instance method)
-        // in a ‘getter’, you should not refer to the names of the columns directly
-        // as this will recursively call the getter and result in a stack overflow,
-        // instead, use the `this.getDataValue` method
-        get() {
-            const url = this.getDataValue('urlTitle');
-            // 'this' allows you to access attributes of the instance
-            return '/wiki/' + url;
-        },
+        type: Sequelize.ENUM('open', 'closed')
     }
-});
+}, {
+    hooks: {},
+    getterMethods: {
+        route: function () {
+            return "/wiki/" + this.urlTitle
+
+        }
+    }
+
+})
 
 //HOOKS FOR PAGE
-//MAKES A URL, BEFORE VALIDATING THE THE ROW THAT WILL BE ADDED TO PAGES TABLE
+//MAKES A URL, BEFORE VALIDATING  THE ROW THAT WILL BE ADDED TO PAGES TABLE
 Page.beforeValidate((pageInstance) => {
     getURL(pageInstance);
 })
 
+//Generate URL
 function getURL(instance) {
     if (instance.title) {
         let title = instance.getDataValue('title');
@@ -51,9 +49,7 @@ function getURL(instance) {
 
 }
 
-
-
-
+//USER TABLE
 const User = db.define('user', {
     name: {
         type: Sequelize.STRING,

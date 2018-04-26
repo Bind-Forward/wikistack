@@ -57,6 +57,7 @@ app.use(function (err, req, res, next) {
 //     .catch((error) => console.error(error));
 //
 
+//Create tables in our DB
 models.db.sync({
         force: false
     })

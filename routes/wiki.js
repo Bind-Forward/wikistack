@@ -5,16 +5,16 @@ const Page = models.Page;
 const User = models.User;
 
 router.get('/', function (req, res, next) {
-    res.redirect('/');
+    Page.findAll({}).then(function (pagesFound) {
+        res.render("index", {
+            pages: pagesFound
+        })
+    })
 });
 
 //express always looks in our "views" dir for templates
 
 router.post('/', function (req, res, next) {
-
-    // STUDENT ASSIGNMENT:
-    // add definitions for `title` and `content`
-    //builds a represention of a table
     //    const page = Page.build({
     //        title: req.body.title,
     //        content: req.body.content
@@ -22,15 +22,11 @@ router.post('/', function (req, res, next) {
     const builtPage = Page.build(req.body);
 
 
-    // make sure we only redirect *after* our save is complete!
-    // note: `.save` returns a promise or it can take a callback.
-
-    //  ANY INTERACTION WITH SEQUELIZE RETURNS A PROMISE.
 
 
+    // ANY INTERACTION WITH SEQUELIZE RETURNS A PROMISE.
     //take what I just built and add it to my database. 
     //returns promise
-
     builtPage.save()
         .then((result) => res.json(req.body))
         //HOW DOES THIS NEXT GO TO OUR ERROR HANDLING MIDDLEWARE?
