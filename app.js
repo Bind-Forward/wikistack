@@ -26,7 +26,6 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json())
 app.use(morgan("dev"))
-//serves public files.
 
 
 app.get("/", function (req, res, next) {
@@ -36,6 +35,7 @@ app.get("/", function (req, res, next) {
 
 app.use("/", router)
 
+//serves public files.
 app.use(express.static('public'))
 
 //ERROR HANDLING, NEEDS 4 ARGS
@@ -57,12 +57,14 @@ app.use(function (err, req, res, next) {
 //     .catch((error) => console.error(error));
 //
 
+
 //Create tables in our DB
 models.db.sync({
         force: false
     })
     .then(function () {
         console.log('All tables created!');
+        console.log("WIKISTACK DB listening on port 5432")
         app.listen(3000, function () {
             console.log('Server is listening on port 3000!');
         });

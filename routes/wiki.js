@@ -18,11 +18,14 @@ router.post('/', function (req, res, next) {
     //    const page = Page.build({
     //        title: req.body.title,
     //        content: req.body.content
-    //    });
+    //    });\
+    //EXPLAIN THIS
+    //add to your model according to what you want the keys to match up to
+    // or if you formatting the post to be like our model simply do this: 
     const builtPage = Page.build(req.body);
 
 
-
+    console.log(builtPage)
 
     // ANY INTERACTION WITH SEQUELIZE RETURNS A PROMISE.
     //take what I just built and add it to my database. 
@@ -51,6 +54,8 @@ router.get("/:urlTitle", function (req, res, next) {
         if (pagesFound === null) {
             return next(new Error("Page was not found"))
         }
+        //the page in our template now refers to an object that we can loop over now.
+        //this key always has to match the variable we use in our template. 
         res.render("wikipage", {
             //use view engine to add data
             page: pagesFound

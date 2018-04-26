@@ -1,9 +1,11 @@
+//Require in SEQUELIZE
 const Sequelize = require('sequelize');
 //where our db lives
 const db = new Sequelize('postgres://localhost:5432/wikistack', {
     logging: false,
 });
 
+//READ DOCS
 const Page = db.define('page', {
     title: {
         type: Sequelize.STRING,
@@ -19,21 +21,22 @@ const Page = db.define('page', {
         type: Sequelize.TEXT,
     },
     status: {
+        //EXPLAIN
         type: Sequelize.ENUM('open', 'closed')
     }
 }, {
+    //ISNT THE GET URL FUNCTION A GETTER? OR IS THE DIFFERENCE IS THAT WE HAVE TO EXPLICITLY CALL THE HOOK?
     hooks: {},
     getterMethods: {
         route: function () {
             return "/wiki/" + this.urlTitle
-
         }
     }
-
 })
 
 //HOOKS FOR PAGE
 //MAKES A URL, BEFORE VALIDATING  THE ROW THAT WILL BE ADDED TO PAGES TABLE
+//Validation makes sure columns follow rules we set before -  allow null or not.
 Page.beforeValidate((pageInstance) => {
     getURL(pageInstance);
 })
