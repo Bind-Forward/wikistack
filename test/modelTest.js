@@ -11,7 +11,6 @@ chai.use(spies);
 describe('tests on the page\'s instance', function () {
     let newPage;
     beforeEach((done) => {
-
         newPage = Page.create({
                 title: 'My Page',
                 content: 'Story of my life!',

@@ -13,6 +13,11 @@ const models = require('./models');
 const bodyParser = require("body-parser");
 // point nunjucks to the directory containing templates and turn off caching; configure returns an Environment 
 // instance, which we'll want to use to add Markdown support later.
+
+
+//NUNJUCKS BOILERPLATE =======================================================
+// point nunjucks to the directory containing templates and turn off caching; 
+//configure returns an Environment instance, which we'll want to use to add Markdown support later.
 const env = nunjucks.configure('views', {
     noCache: true
 });
@@ -20,19 +25,15 @@ const env = nunjucks.configure('views', {
 app.set('view engine', 'html');
 // when res.render works with html files, have it use nunjucks to do so
 app.engine('html', nunjucks.render);
+
+//============================================================================
+
 //FOR FORMS
 app.use(bodyParser.urlencoded({
     extended: true
 }))
 app.use(bodyParser.json())
 app.use(morgan("dev"))
-
-
-app.get("/", function (req, res, next) {
-    res.render("index")
-    next()
-})
-
 app.use("/", router)
 
 //serves public files.
@@ -60,7 +61,8 @@ app.use(function (err, req, res, next) {
 
 //Create tables in our DB
 models.db.sync({
-        force: false
+        //Drop all tables and create new ones whenver we make a change to our model. 
+        force: true
     })
     .then(function () {
         console.log('All tables created!');
@@ -70,7 +72,3 @@ models.db.sync({
         });
     })
     .catch(console.error.bind(console));
-
-//MOVED THIS TO TABLES SYNC, USING PROMISES
-//listen on port 30000
-// app.listen(3000, () => console.log('Server listening on port 3000!'))

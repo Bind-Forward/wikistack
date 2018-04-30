@@ -29,6 +29,8 @@ const Page = db.define('page', {
     hooks: {},
     getterMethods: {
         route: function () {
+            //whenever we use invoke this virtual, we use the urlTitle that is created before the validation
+            //of this model. This virtual, like all virtuals use data within the instance to return a different Value. 
             return "/wiki/" + this.urlTitle
         }
     }
@@ -66,6 +68,14 @@ const User = db.define('user', {
     },
 });
 
+
+//The association we suggest using in this case is "page belongs to user". This will establish a connection that describes that a page has one user associated with it and that information will be established on the pages table rows (as opposed to on users rows).
+
+Page.belongsTo(User, {
+    as: 'author'
+});
+
+//Our new pages table (check your GUI) should have a new column authorId which will contain the id of the user associated with this page.
 
 
 
