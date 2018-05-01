@@ -6,7 +6,6 @@ const Page = require("../models").Page;
 
 //GOT HERE FROM APP.JS
 
-//FOR THE PATHS USE CODE FROM REQUIRED IN FILES
 
 router.get("/", function (req, res, next) {
     Page.findAll().then((pages) => {
@@ -16,10 +15,11 @@ router.get("/", function (req, res, next) {
     })
 })
 
+//FOR THE PATHS USE CODE FROM REQUIRED IN FILES
 
 
 router.use('/wiki/', wikiRouter);
-router.use('/user', userRouter);
+router.use('/users', userRouter);
 
 
 

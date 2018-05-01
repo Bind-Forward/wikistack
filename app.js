@@ -33,13 +33,16 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 app.use(bodyParser.json())
+//my Logger
 app.use(morgan("dev"))
+//go to routes for all paths
 app.use("/", router)
 
 //serves public files.
 app.use(express.static('public'))
 
 //ERROR HANDLING, NEEDS 4 ARGS
+//How does it know which is which?
 app.use(function (err, req, res, next) {
     console.error(err);
     res.status(500).send(err.message);
@@ -62,7 +65,7 @@ app.use(function (err, req, res, next) {
 //Create tables in our DB
 models.db.sync({
         //Drop all tables and create new ones whenver we make a change to our model. 
-        force: true
+        force: false
     })
     .then(function () {
         console.log('All tables created!');

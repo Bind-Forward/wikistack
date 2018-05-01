@@ -1,0 +1,11 @@
+{% extends "layout.html" %} {% block content %}
+<ul>
+    <h2>{{author.name}}</h2>
+    <p>{{author.email}}</p>
+    {% for user in users %}
+    <li class="list-unstyled">
+        <a href="{{ user.route }}">{{ user.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
