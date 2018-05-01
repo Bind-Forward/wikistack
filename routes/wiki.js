@@ -23,22 +23,39 @@ router.post('/', function (req, res, next) {
     // or if you formatting the post to be like our model simply do this: 
 
     //if you arent allowing empty fields and the form post is with empty fields you might get an error. 
-    const builtPage = Page.build(req.body);
-    // ANY INTERACTION WITH SEQUELIZE RETURNS A PROMISE.
-    //take what I just built and add it to my database. 
-    //returns promise
-    builtPage.save()
-        .then((result) => {
 
-            res.redirect(builtPage.route)
+    User.findOrCreate({
+            //look for instances in our query
+            where: {
+                name: req.body.name,
+                email: req.body.email
+            }
+        })
+        .then(function (values) {
+            //returns an array
+            //the instance.
+
+            const user = values[0];
+            //WHY DONT WE HAVE TO USE THE BOOL AT values[1]?
+            //build our page
+            const page = Page.build(req.body);
+            //Saves the instance to our db, then grabs that page
+            // and uses setAuthor to associate the user to the page
+            // uses a one to one connect. 
+            return page.save().then(function (page) {
+                //associate
+                return page.setAuthor(user);
+            });
 
         })
-        //HOW DOES THIS NEXT GO TO OUR ERROR HANDLING MIDDLEWARE?
-        .catch(function (err) {
-            next(err)
+        .then(function (page) {
+            //finally redirect. 
+            res.redirect(page.route);
         })
-
+        .catch(next);
 });
+
+
 
 router.get('/add', function (req, res, next) {
     res.render("addpage")
